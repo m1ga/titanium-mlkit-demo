@@ -87,6 +87,10 @@ for **mode**:
 -   **captureImage**: boolean, default `false`. Will attach the scanned image for barcode/qrcodes in the `scan` event
 -   **scanCards**: boolean, default `false`. When mode is `SCAN_TEXT` it will return `cardNumber`,`cardExpirationMonth`,`cardExpirationYear`,`cardOwner`
 -   **scanRegion**: object with {top,left,right,bottom}. When set it will only scan inside that region.
+-   **zoom**: boolean, default `false`. Enables pinch and zoom.
+-   **zoomFactor**: float, Set the zoom value.
+-   **minZoom**: float (getter), returns the min zoom level.
+-   **maxZoom**: float (getter), returns the max zoom level.
 
 ## Methods
 
@@ -157,6 +161,7 @@ cameraView.addEventListener('ready', function() {
 	cameraView.analyzerWidth = 1280;
 	cameraView.analyzerHeight = 720;
 	cameraView.overlwayWidth = 50;
+	cameraView.zoom = true;
 	cameraView.formats = [ // OR: TiMLKit.BARCODE_FORMAT_ALL
 		TiMLKit.BARCODE_FORMAT_CODE_128,
 		TiMLKit.BARCODE_FORMAT_CODE_39,
