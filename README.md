@@ -1,7 +1,5 @@
 # Titanium MLKit module
 
-Demo of the Titanium MLKit Android module.
-
 <b>Current features:</b>
 * QR/bacrode scanning (one shot or continuous)
 * OCR/Text recognition
@@ -11,7 +9,8 @@ The camera is displayed as a view so you can place it where you want and add oth
 
 ## How to get the module
 
-This is a paid module. It will help to keep the module up-to-date and and maintain the compatibility with the latest Titanium SDK. If you are interested in the module contact me on [TiSlack](tislack.org/), [Twitter](twitter.com/michaelgangolf) or using my [contact form](https://www.migaweb.de/#contact).
+This is a <b>paid module</b>. It will help to keep the module up-to-date and and maintain the compatibility with the latest Titanium SDK. If you are interested in the module contact me on [TiSlack](tislack.org/), [Twitter](twitter.com/michaelgangolf) or using my [contact form](https://www.migaweb.de/#contact).
+For a demo check the <b>Release</b> section.
 
 ## Installation
 
@@ -34,7 +33,7 @@ This is a paid module. It will help to keep the module up-to-date and and mainta
 </modules>
 ```
 
-## Constants
+## constants
 
 for **focusMode**:
 
@@ -69,8 +68,10 @@ for **mode**:
 
 -   TiMLKit.SCAN_TEXT
 -   TiMLKit.SCAN_BARCODE
+-   TiMLKit.SCAN_POSE
 
-## Parameters
+
+## parameters
 
 -   **mode**: int (constants), default `SCAN_BARCODE`. Use `SCAN_BARCODE` or `SCAN_TEXT`
 -   **analyzerWidth**: int, default `1920`. Width of the ImageAnalyser
@@ -92,16 +93,16 @@ for **mode**:
 -   **minZoom**: float (getter), returns the min zoom level.
 -   **maxZoom**: float (getter), returns the max zoom level.
 
-## Methods
+## methods
 
 -   **start()**: start camera view
 -   **stop()**: stop camera view
 -   **pause()**: pause the barcode recognition, camera is still active
 
-## Events
+## events
 
 -   **ready**: view is ready
--   **scan**: found barcodes; returns `result` as an array with `valueType, displayValue, rawValue, format, rect[centerX,centerY,left,top,width,height], image`
+-   **scan**: found barcodes; returns `result` as an array with `valueType, displayValue, rawValue, format, rect[centerX,centerY,left,top,width,height], image`. If you use `SCAN_POSE` you will get elements like `leftArm` or `rightArm`
 -   **success**
 
 ## Example
