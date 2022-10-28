@@ -76,7 +76,7 @@ for **mode**:
 -   **mode**: int (constants), default `SCAN_BARCODE`. Use `SCAN_BARCODE` or `SCAN_TEXT`
 -   **analyzerWidth**: int, default `1920`. Width of the ImageAnalyser
 -   **analyzerHeight**: int, default `1080`. Height of the ImageAnalyser
--   **focusMode**: constant from above
+-   **focusMode**: constant from above (before opening the camera)
 -   **torchMode**: constant from above
 -   **formats**: Array with constants or nothing for all
 -   **isFrontCameraActive**: boolean, default `false`. Set it to `true` for front camera
@@ -88,6 +88,7 @@ for **mode**:
 -   **captureImage**: boolean, default `false`. Will attach the scanned image for barcode/qrcodes in the `scan` event
 -   **scanCards**: boolean, default `false`. When mode is `SCAN_TEXT` it will return `cardNumber`,`cardExpirationMonth`,`cardExpirationYear`,`cardOwner`
 -   **scanRegion**: object with {top,left,right,bottom}. When set it will only scan inside that region.
+-   **showScanRegion**: boolean, default `false`. Set it before starting the camera to display the scanRegion in your view. Use it only for debugging!
 -   **zoom**: boolean, default `false`. Enables pinch and zoom.
 -   **zoomFactor**: float, Set the zoom value.
 -   **minZoom**: float (getter), returns the min zoom level.
@@ -102,7 +103,10 @@ for **mode**:
 ## events
 
 -   **ready**: view is ready
--   **scan**: found barcodes; returns `result` as an array with `valueType, displayValue, rawValue, format, rect[centerX,centerY,left,top,width,height], image`. If you use `SCAN_POSE` you will get elements like `leftArm` or `rightArm`
+-   **scan**:
+	- found barcodes and text; returns `result` as an array with `valueType, displayValue, rawValue, format, rect[centerX,centerY,left,top,width,height], image`.
+	- Using `SCAN_POSE` you will get elements like `leftArm` or `rightArm`
+	- if `scanCards` is enabled it will return `result` and `cardNumber`, `cardExpirationYear`, `cardExpirationMonth`, `cardOwner`.
 -   **success**
 
 ## Example
@@ -143,11 +147,17 @@ const img = Ti.UI.createImageView({
 	scalingMode: Titanium.Media.IMAGE_SCALING_ASPECT_FIT
 })
 cameraView.addEventListener('scan', event => {
+
+	// prefilled fields for scanCard = true
+	if (event.cardNumber != null && event.cardOwner != null && event.cardExpirationMonth != null) {
+		logView.value += "Card no: " + event.cardNumber + "\n" + "Owner: " + event.cardOwner + "\n" + "Exp. date: " + event.cardExpirationMonth + "/" + event.cardExpirationYear + "\n";
+	}
+
 	// console.info(JSON.stringify(event.result));
 	for (var i = 0; i < event.result.length; ++i) {
 		logView.value += event.result[i].rawValue + ' | ';
 	}
-	if (event.result[0].image) {
+	if (event.result[0] && event.result[0].image) {
 		img.image = event.result[0].image
 	}
 });
@@ -163,6 +173,8 @@ cameraView.addEventListener('ready', function() {
 	cameraView.analyzerHeight = 720;
 	cameraView.overlwayWidth = 50;
 	cameraView.zoom = true;
+	// cameraView.showScanRegion = false;
+	// cameraView.scanCards = false;
 	cameraView.formats = [ // OR: TiMLKit.BARCODE_FORMAT_ALL
 		TiMLKit.BARCODE_FORMAT_CODE_128,
 		TiMLKit.BARCODE_FORMAT_CODE_39,
