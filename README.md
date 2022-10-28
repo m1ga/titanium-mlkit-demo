@@ -115,8 +115,14 @@ for **mode**:
 import TiMLKit from 'ti.mlkit';
 
 const win = Ti.UI.createWindow();
-const cameraView = TiMLKit.createCameraView({
+const view_cam = Ti.UI.createView({
+	top: 0,
+	width: Ti.UI.FILL,
 	bottom: 250
+})
+const cameraView = TiMLKit.createCameraView({
+	width: Ti.UI.FILL,
+	height: Ti.UI.FILL
 });
 const logView = Ti.UI.createTextArea({
 	height: 200,
@@ -146,6 +152,17 @@ const img = Ti.UI.createImageView({
 	width: "50%",
 	scalingMode: Titanium.Media.IMAGE_SCALING_ASPECT_FIT
 })
+const view_overlay = Ti.UI.createView({
+	top: 90,
+	left: 90,
+	right: 90,
+	bottom: 90,
+	borderWidth: 2,
+	borderColor: "#f00",
+	touchEnabled: false
+})
+view_cam.add(cameraView);
+view_cam.add(view_overlay);
 cameraView.addEventListener('scan', event => {
 
 	// prefilled fields for scanCard = true
@@ -189,10 +206,21 @@ cameraView.addEventListener('ready', function() {
 		TiMLKit.BARCODE_FORMAT_UPCE,
 		TiMLKit.BARCODE_FORMAT_PDF_417,
 		TiMLKit.BARCODE_FORMAT_AZTEC
-	]
+	];
+
+	// show an overlay - only items inside this region will be scanned
+	//
+	// Tip: make it a bit bigger as the region your are showing on screen.
+	//      use cameraView.showScanRegion = true; to debug it
+	cameraView.scanRegion = {
+		top: view_overlay.top - 5,
+		left: view_overlay.left - 5,
+		right: view_overlay.right - 5,
+		bottom: view_overlay.bottom - 5
+	}
 });
 
-win.add([cameraView, logView, btn_mode, btn_crop, btn_overlay, img]);
+win.add([view_cam, logView, btn_mode, btn_crop, btn_overlay, img]);
 
 var currentMode = 1;
 btn_mode.addEventListener('click', function() {
