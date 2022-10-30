@@ -109,7 +109,63 @@ for **mode**:
 	- if `scanCards` is enabled it will return `result` and `cardNumber`, `cardExpirationYear`, `cardExpirationMonth`, `cardOwner`.
 -   **success**
 
-## Example
+## Simple text scan example
+
+```js
+import TiMLKit from 'ti.mlkit';
+
+const win = Ti.UI.createWindow();
+const cameraView = TiMLKit.createCameraView({
+	width: Ti.UI.FILL,
+	top: 0,
+	bottom: 200
+});
+const logView = Ti.UI.createTextArea({
+	height: 200,
+	left: 0,
+	width: Ti.UI.FILL,
+	bottom: 0,
+	editable: false
+});
+
+cameraView.addEventListener('scan', event => {
+	if (event.result) {
+		for (var i = 0; i < event.result.length; ++i) {
+			if (event.result[i].rawValue) {
+				logView.value += event.result[i].rawValue + ' | ';
+			}
+		}
+	}
+});
+
+cameraView.addEventListener('ready', function() {
+	cameraView.focusMode = TiMLKit.FOCUS_MODE_CONTINUOUS_AUTO_FOCUS;
+	cameraView.mode = TiMLKit.SCAN_TEXT;
+	cameraView.analyzerWidth = 1024;
+	cameraView.analyzerHeight = 768;
+	cameraView.showOverlay = true;
+});
+
+win.add([logView, cameraView]);
+
+win.addEventListener('open', function() {
+	Ti.Media.requestCameraPermissions(function(event) {
+		if (!event.success) {
+			alert("No permissions!");
+			return;
+		}
+		cameraView.start();
+	})
+});
+
+win.addEventListener('close', function() {
+	cameraView.stop();
+});
+
+win.open();
+```
+
+## Full example
 
 ```js
 import TiMLKit from 'ti.mlkit';
