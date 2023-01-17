@@ -69,6 +69,7 @@ for **mode**:
 -   TiMLKit.SCAN_TEXT
 -   TiMLKit.SCAN_BARCODE
 -   TiMLKit.SCAN_POSE
+-   TiMLKit.SCAN_BARCODE_TEXT
 
 
 ## parameters
@@ -170,6 +171,10 @@ win.open();
 ```js
 import TiMLKit from 'ti.mlkit';
 
+var currentMode = 0;
+var isOverlay = false;
+var isCropMode = false;
+
 const win = Ti.UI.createWindow();
 const view_cam = Ti.UI.createView({
 	top: 0,
@@ -219,6 +224,7 @@ const view_overlay = Ti.UI.createView({
 })
 view_cam.add(cameraView);
 view_cam.add(view_overlay);
+
 cameraView.addEventListener('scan', event => {
 
 	// prefilled fields for scanCard = true
@@ -226,7 +232,6 @@ cameraView.addEventListener('scan', event => {
 		logView.value += "Card no: " + event.cardNumber + "\n" + "Owner: " + event.cardOwner + "\n" + "Exp. date: " + event.cardExpirationMonth + "/" + event.cardExpirationYear + "\n";
 	}
 
-	// console.info(JSON.stringify(event.result));
 	for (var i = 0; i < event.result.length; ++i) {
 		logView.value += event.result[i].rawValue + ' | ';
 	}
@@ -239,13 +244,15 @@ cameraView.addEventListener('scan', event => {
 cameraView.addEventListener('ready', function() {
 	cameraView.focusMode = TiMLKit.FOCUS_MODE_CONTINUOUS_AUTO_FOCUS; // OR: FOCUS_MODE_AUTO_FOCUS
 	cameraView.torchMode = TiMLKit.TORCH_MODE_OFF; // OR: TORCH_MODE_OFF
-	cameraView.mode = TiMLKit.SCAN_TEXT;
+	cameraView.mode = TiMLKit.SCAN_BARCODE;
 	cameraView.overlayColor = "#ff0";
-	cameraView.captureImage = true;
+	cameraView.captureImage = false;
 	cameraView.analyzerWidth = 1280;
 	cameraView.analyzerHeight = 720;
 	cameraView.overlwayWidth = 50;
 	cameraView.zoom = true;
+	cameraView.showOverlay = true;
+
 	// cameraView.showScanRegion = false;
 	// cameraView.scanCards = false;
 	cameraView.formats = [ // OR: TiMLKit.BARCODE_FORMAT_ALL
@@ -278,23 +285,31 @@ cameraView.addEventListener('ready', function() {
 
 win.add([view_cam, logView, btn_mode, btn_crop, btn_overlay, img]);
 
-var currentMode = 1;
 btn_mode.addEventListener('click', function() {
 	currentMode++;
-	if (currentMode > 1) {
+	if (currentMode > 3) {
 		currentMode = 0;
 	}
-	cameraView.mode = (currentMode) ? TiMLKit.SCAN_TEXT : TiMLKit.SCAN_BARCODE;
+
+	cameraView.mode = currentMode;
+	if (currentMode == 0) {
+		console.log("Barcode mode");
+	} else if (currentMode == 1) {
+		console.log("Text mode");
+	} else if (currentMode == 2) {
+		console.log("Pose mode");
+	} else if (currentMode == 3) {
+		console.log("Barcode/text mode");
+	}
 	cameraView.start();
 });
 
-var isOverlay = false;
+
 btn_overlay.addEventListener('click', function() {
 	isOverlay = !isOverlay;
 	cameraView.showOverlay = isOverlay;
 });
 
-var isCropMode = false;
 btn_crop.addEventListener('click', function() {
 	isCropMode = !isCropMode;
 	cameraView.captureImageRectOnly = isCropMode;
@@ -307,19 +322,7 @@ win.addEventListener('open', function() {
 			return;
 		}
 
-		if (OS_IOS) {
-			Ti.Media.requestAudioRecorderPermissions(function(event2) {
-				if (!event2.success) {
-					alert("No microphone permissions!");
-					return;
-				}
-
-				// Start session
-				cameraView.start();
-			});
-		} else {
-			cameraView.start();
-		}
+		cameraView.start();
 	})
 });
 
@@ -328,4 +331,5 @@ win.addEventListener('close', function() {
 });
 
 win.open();
+
 ```
