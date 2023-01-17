@@ -33,6 +33,13 @@ For a demo check the <b>Release</b> section.
 </modules>
 ```
 
+If you use it with Ti < 12 add this to your build.gradle
+```
+android {
+    compileSdkVersion 33
+}
+```
+
 ## constants
 
 for **focusMode**:
