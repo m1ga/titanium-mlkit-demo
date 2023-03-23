@@ -1,9 +1,10 @@
 # Titanium MLKit module
 
 <b>Current features:</b>
-* QR/bacrode scanning (one shot or continuous)
-* OCR/Text recognition
-* Basic pose detection
+
+-   QR/bacrode scanning (one shot or continuous)
+-   OCR/Text recognition
+-   Basic pose detection
 
 The camera is displayed as a view so you can place it where you want and add other Titanium elements over it.
 
@@ -33,12 +34,11 @@ For a demo check the <b>Release</b> section.
 </modules>
 ```
 
-If you use it with Ti < 12 add this to your build.gradle
-```
-android {
-    compileSdkVersion 33
-}
-```
+If you use it with Ti &lt; 12 add this to your build.gradle
+
+    android {
+        compileSdkVersion 33
+    }
 
 ## constants
 
@@ -78,7 +78,6 @@ for **mode**:
 -   TiMLKit.SCAN_POSE
 -   TiMLKit.SCAN_BARCODE_TEXT
 
-
 ## parameters
 
 -   **mode**: int (constants), default `SCAN_BARCODE`. Use `SCAN_BARCODE` or `SCAN_TEXT`
@@ -104,6 +103,12 @@ for **mode**:
 
 ## methods
 
+#### TiMLKit
+
+-   **recognizeText({image:Blob, callback: function })**: text recognition on a local blob. Parameters are image (blob!) and a callback function. This will contain `text` as a return property
+
+#### CameraView
+
 -   **start()**: start camera view
 -   **stop()**: stop camera view
 -   **pause()**: pause the barcode recognition, camera is still active
@@ -112,10 +117,23 @@ for **mode**:
 
 -   **ready**: view is ready
 -   **scan**:
-	- found barcodes and text; returns `result` as an array with `valueType, displayValue, rawValue, format, rect[centerX,centerY,left,top,width,height], image`.
-	- Using `SCAN_POSE` you will get elements like `leftArm` or `rightArm`
-	- if `scanCards` is enabled it will return `result` and `cardNumber`, `cardExpirationYear`, `cardExpirationMonth`, `cardOwner`.
+    -   found barcodes and text; returns `result` as an array with `valueType, displayValue, rawValue, format, rect[centerX,centerY,left,top,width,height], image`.
+    -   Using `SCAN_POSE` you will get elements like `leftArm` or `rightArm`
+    -   if `scanCards` is enabled it will return `result` and `cardNumber`, `cardExpirationYear`, `cardExpirationMonth`, `cardOwner`.
 -   **success**
+
+## Analyze local image
+
+```js
+import TiMLKit from 'ti.mlkit';
+const file = Ti.Filesystem.getFile(Ti.Filesystem.resourcesDirectory, "/images/test.png");
+TiMLKit.recognizeText({
+	image: file.read(),
+	callback: function(e) {
+		console.log(e.text);
+	}
+});
+```
 
 ## Simple text scan example
 
@@ -338,5 +356,4 @@ win.addEventListener('close', function() {
 });
 
 win.open();
-
 ```
