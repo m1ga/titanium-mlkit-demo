@@ -100,12 +100,14 @@ for **mode**:
 -   **zoomFactor**: float, Set the zoom value.
 -   **minZoom**: float (getter), returns the min zoom level.
 -   **maxZoom**: float (getter), returns the max zoom level.
+-   **returnAllBarcodes**: boolean, default `false`. Will return all potential barcodes even if they cannot be decoded.
 
 ## methods
 
 #### TiMLKit
 
 -   **recognizeText({image:Blob, callback: function })**: text recognition on a local blob. Parameters are image (blob!) and a callback function. This will contain `text` as a return property
+-   **recognizeCode({image:Blob, callback: function })**: qr/barcode recognition on a local blob. Parameters are image (blob!) and a callback function. This will contain `text` as a return property
 
 #### CameraView
 
