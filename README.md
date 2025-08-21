@@ -34,11 +34,9 @@ For a demo check the <b>Release</b> section.
 </modules>
 ```
 
-If you use it with Ti &lt; 12 add this to your build.gradle
-
-    android {
-        compileSdkVersion 33
-    }
+_Version 2.0.0 needs Titanium >= 12.6.0_
+<br>
+_Version 2.1.0 needs Titanium >= 12.7.0_
 
 ## constants
 
@@ -101,6 +99,7 @@ for **mode**:
 -   **minZoom**: float (getter), returns the min zoom level.
 -   **maxZoom**: float (getter), returns the max zoom level.
 -   **returnAllBarcodes**: boolean, default `false`. Will return all potential barcodes even if they cannot be decoded.
+-   **currentCamera**: int (getter). TiMLKit.CAMERA_FRONT (0) or TiMLKit.CAMERA_BACK (1)
 
 ## methods
 
@@ -108,6 +107,8 @@ for **mode**:
 
 -   **recognizeText({image:Blob, callback: function })**: text recognition on a local blob. Parameters are image (blob!) and a callback function. This will contain `text` as a return property
 -   **recognizeCode({image:Blob, callback: function })**: qr/barcode recognition on a local blob. Parameters are image (blob!) and a callback function. This will contain `text` as a return property
+-   **toggleCamera()**: toggles between front and back facing camera
+
 
 #### CameraView
 
